@@ -17,9 +17,12 @@ AB_OTA_POSTINSTALL_CONFIG += \
 PRODUCT_PACKAGES += \
     android.hardware.boot@1.0-impl \
     android.hardware.boot@1.0-service
+    android.hardware.boot@1.0-service.recovery \
+    bootctrl.mt6765 \
+    bootctrl.mt6765.recovery \
 
 PRODUCT_PACKAGES += \
-    bootctrl.mt6765
+    bootctrl
 
 PRODUCT_STATIC_BOOT_CONTROL_HAL := \
     bootctrl.mt6765 \
