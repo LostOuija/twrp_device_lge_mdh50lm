@@ -26,7 +26,7 @@
 #
 
 on post-fs
-        mkdir /mnt/vendor/persist-lg/audio 0774 audioserver audioserver
+	mkdir /mnt/vendor/persist-lg/audio 0774 audioserver audioserver
 
 service minios_spkcal /vendor/bin/factorytest_ti -l /vendor/etc/spkcal/l_Audio_modes_TAS2563.ftcfg -r /vendor/etc/spkcal/r_Audio_modes_TAS2563.ftcfg -u -f
     class late_start

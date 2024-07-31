@@ -151,10 +151,10 @@ on property:vendor.lge.usb.typec.power_role=none
 
 # USB Moisture Detection
 on property:persist.vendor.lge.usb.moisture_en=*
-        write /sys/class/dual_role_usb/otg_default/moisture_en ${persist.vendor.lge.usb.moisture_en}
+	write /sys/class/dual_role_usb/otg_default/moisture_en ${persist.vendor.lge.usb.moisture_en}
 
 on property:persist.vendor.lge.usb.moisture_ux=*
-        write /sys/class/dual_role_usb/otg_default/moisture_ux ${persist.vendor.lge.usb.moisture_ux}
+	write /sys/class/dual_role_usb/otg_default/moisture_ux ${persist.vendor.lge.usb.moisture_ux}
 
 # charging
 on property:sys.usb.config=charging && property:sys.usb.configfs=0
@@ -452,4 +452,127 @@ on property:sys.usb.config=ptp,adb && property:sys.usb.configfs=0
 on property:sys.usb.config=rndis && property:sys.usb.configfs=0
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor 1004
-    write /sys/class/android_usb/android0/idProduct
+    write /sys/class/android_usb/android0/idProduct 6344
+    write /sys/class/android_usb/android0/bDeviceClass 239
+    write /sys/class/android_usb/android0/bDeviceSubClass 2
+    write /sys/class/android_usb/android0/bDeviceProtocol 1
+    write /sys/class/android_usb/android0/f_acm/instances 1
+    write /sys/class/android_usb/android0/functions rndis,acm,gser
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config}
+
+on property:sys.usb.config=rndis,adb && property:sys.usb.configfs=0
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 1004
+    write /sys/class/android_usb/android0/idProduct 6344
+    write /sys/class/android_usb/android0/bDeviceClass 239
+    write /sys/class/android_usb/android0/bDeviceSubClass 2
+    write /sys/class/android_usb/android0/bDeviceProtocol 1
+    write /sys/class/android_usb/android0/f_acm/instances 1
+    write /sys/class/android_usb/android0/functions rndis,acm,gser,adb
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config}
+
+#gs3 for ELT,comport --> /dev/ttyGS3
+on property:sys.usb.config=gs3 && property:sys.usb.configfs=0
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 1004
+    write /sys/class/android_usb/android0/idProduct 61F1
+    write /sys/class/android_usb/android0/bDeviceClass 239
+    write /sys/class/android_usb/android0/bDeviceSubClass 2
+    write /sys/class/android_usb/android0/bDeviceProtocol 1
+    write /sys/class/android_usb/android0/f_acm/instances 1
+    write /sys/class/android_usb/android0/f_gser/ports 1
+    write /sys/class/android_usb/android0/f_acm/port_index 4
+    write /sys/class/android_usb/android0/functions acm,gser,mtp
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config}
+    setprop vendor.usb.acm_idx 4
+
+#mtp,gs3 for ELT,comport --> /dev/ttyGS3
+on property:sys.usb.config=mtp,gs3 && property:sys.usb.configfs=0
+    stop adbd
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 1004
+    write /sys/class/android_usb/android0/idProduct 61F1
+    write /sys/class/android_usb/android0/bDeviceClass 239
+    write /sys/class/android_usb/android0/bDeviceSubClass 2
+    write /sys/class/android_usb/android0/bDeviceProtocol 1
+    write /sys/class/android_usb/android0/f_acm/instances 1
+    write /sys/class/android_usb/android0/f_gser/ports 1
+    write /sys/class/android_usb/android0/f_acm/port_index 4
+    write /sys/class/android_usb/android0/functions acm,gser,mtp,adb
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config}
+    setprop vendor.usb.acm_idx 4
+################################################################################
+# FACTORY
+################################################################################
+
+on boot && property:ro.bootmode=qem_56k
+    setprop vendor.lge.usb.configfs ${sys.usb.configfs}
+    setprop sys.usb.configfs 2
+    setprop sys.usb.config factory
+
+on boot && property:ro.bootmode=qem_130k
+    setprop vendor.lge.usb.configfs ${sys.usb.configfs}
+    setprop sys.usb.configfs 2
+    setprop sys.usb.config factory
+
+on boot && property:ro.bootmode=qem_910k
+    setprop vendor.lge.usb.configfs ${sys.usb.configfs}
+    setprop sys.usb.configfs 2
+    setprop sys.usb.config factory
+
+on boot && property:ro.bootmode=pif_56k
+    setprop vendor.lge.usb.configfs ${sys.usb.configfs}
+    setprop sys.usb.configfs 2
+    setprop sys.usb.config factory
+
+on boot && property:ro.bootmode=pif_130k
+    setprop vendor.lge.usb.configfs ${sys.usb.configfs}
+    setprop sys.usb.configfs 2
+    setprop sys.usb.config factory
+
+on boot && property:ro.bootmode=pif_910k
+    setprop vendor.lge.usb.configfs ${sys.usb.configfs}
+    setprop sys.usb.configfs 2
+    setprop sys.usb.config factory
+
+# factory
+on property:sys.usb.config=factory && property:sys.usb.configfs=0
+    setprop vendor.lge.usb.configfs ${sys.usb.configfs}
+
+on property:sys.usb.config=factory && property:vendor.lge.usb.configfs=0
+    stop adbd
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/iSerial " "
+    write /sys/class/android_usb/android0/idVendor 1004
+    write /sys/class/android_usb/android0/idProduct 6000
+    write /sys/class/android_usb/android0/bDeviceClass 2
+    write /sys/class/android_usb/android0/bDeviceSubClass 0
+    write /sys/class/android_usb/android0/bDeviceProtocol 0
+    write /sys/class/android_usb/android0/functions acm,gser
+    write /sys/devices/platform/mt_usb/cmode 1
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config}
+
+# factory,adb
+on property:sys.usb.config=factory,adb && property:sys.usb.configfs=0
+    setprop vendor.lge.usb.configfs ${sys.usb.configfs}
+
+on property:sys.usb.config=factory,adb && property:vendor.lge.usb.configfs=0
+    stop adbd
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 1004
+    write /sys/class/android_usb/android0/idProduct 633A
+    write /sys/class/android_usb/android0/bDeviceClass 239
+    write /sys/class/android_usb/android0/bDeviceSubClass 2
+    write /sys/class/android_usb/android0/bDeviceProtocol 1
+    write /sys/class/android_usb/android0/f_acm/instance 1
+    write /sys/class/android_usb/android0/functions acm,gser,adb
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config}

@@ -349,8 +349,8 @@ on late-fs
 on post-fs-data
     write /proc/bootprof "INIT:post-fs-data"
 
-        #Thermal
-        mkdir /data/.tp/ 0775 system system
+	#Thermal
+	mkdir /data/.tp/ 0775 system system
 
     # start debuggerd to make debugging early-boot crashes easier.
     start debuggerd
@@ -409,7 +409,7 @@ on post-fs-data
     mkdir /mnt/vendor/nvdata/md  0770 root system
     mkdir /mnt/vendor/nvdata/md2 0770 root system
     mkdir /mnt/vendor/nvdata/md3 0770 root system
-    mkdir /data/md3        0770 root system
+    mkdir /data/md3	0770 root system
 
     chown radio radio /sys/kernel/ccci/boot
 
@@ -638,7 +638,7 @@ service adbd /system/bin/adbd --root_seclabel=u:r:su:s0
 
 service thermal_manager /vendor/bin/thermal_manager
     user root
-        group system
+	group system
     oneshot
 
 service permission_check /vendor/bin/permission_check
