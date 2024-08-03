@@ -99,4 +99,4 @@ PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH)
 
 # Inherit the proprietary files
-$(call inherit-product, vendor/lge/mdh50lm/mdh50lm-vendor.mk)
+
