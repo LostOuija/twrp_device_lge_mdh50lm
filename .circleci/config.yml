@@ -1,0 +1,49 @@
+version: 2.1
+jobs:
+  build:
+             run: 
+             command: docker pull yshalsager/cyanogenmod:latest
+       command: cd $HOME && mkdir twrp
+       command:  >-
+          wget -q https://github.com/PhantomZone54/twrp_sources_norepo/releases/download/v3.3.1-20200222/MinimalOmniRecovery-twrp-6.0-norepo-20200222.tar.xz -O $HOME/twrp.tar.xz
+     command:  tar -xJf twrp.tar.xz --directory $HOME/twrp/ && rm twrp.tar.xz
+      command:  >-
+          cd $HOME/twrp/ && git clone https://github.com/LostOuija/twrp_device_lge_mdh50lm
+      command:  >-
+          rm -rf bootable/recovery && git clone https://github.com/TeamWin/android_bootable_recovery -b android-9.0 --depth 1 bootable/recovery
+       command:  >-
+          rm -rf external/busybox && git clone https://github.com/omnirom/android_external_busybox -b android-9.0 --depth 1 external/busybox
+      command:  >-
+          rm -rf external/ntfs-3g && git clone https://github.com/omnirom/android_external_ntfs-3g -b android-8.1 --depth 1 external/ntfs-3g
+      command:  >-
+          rm -rf external/exfat && git clone https://github.com/omnirom/android_external_exfat -b android-8.1 --depth 1 external/exfat
+      command:  >-
+          rm -rf external/fuse && git clone https://github.com/omnirom/android_external_fuse -b android-8.0 --depth 1 external/fuse
+       command:  >-
+          ( rm -rf system/vold || true) && git clone https://github.com/omnirom/android_system_vold -b android-6.0 --depth 1 system/vold
+       command:  >
+          docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/cmbuild/twrp/:rw,z" yshalsager/cyanogenmod bash << EOF
+          sudo apt-get update -qqy
+          #sudo apt-get install -qqy --no-install-recommends
+          openjdk-8-jdk-headless
+          cd /home/cmbuild/twrp/
+          source build/envsetup.sh
+          lunch twrp_mdh50lm-userdebug
+          mka recoveryimage 1>/dev/null
+          exit
+          EOF
+      command:  >-
+          export version=$(cat bootable/recovery/variables.h | grep "define TW_MAIN_VERSION_STR" | cut -d '"' -f2)
+      command: export nowTime=$(date +%Y%m%d-%H%M)
+      command:  >-
+          cp $HOME/twrp/out/target/product/mdh50lm/recovery.img $HOME/twrp/TWRP-$version-mdh50lm-$nowTime-Unofficial.img
+      command:  cd $HOME/twrp/out/target/product/mdh50lm/system/
+      command: tar -I pxz -cf $HOME/twrp/extra-system-files-$nowTime.tar.xz *
+      command:  cd $HOME/twrp/
+      command:  >-
+          wput TWRP-$version-mdh50lm-$nowTime-Unofficial.img ftp://
+workflows:
+  build-workflow:
+    jobs:
+      - build
+      
